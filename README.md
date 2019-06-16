@@ -14,3 +14,8 @@ This is an iOS app, supporting 11.0 or newer, showing the current time and two a
 2. for 30 seconds, stretch.
 3. for the next 30 seconds, take rest.
 4. repeat 2 & 3.
+
+**Screenshot**
+
+<img src="/images/IMG_0035.PNG" width="150">
+<img src="/images/IMG_0036.PNG" height="150">
