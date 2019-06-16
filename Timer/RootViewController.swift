@@ -93,6 +93,7 @@ class RootViewController: UIViewController {
 
 	@available(iOS 11.0, *)
 	override func viewSafeAreaInsetsDidChange() {
+		super.viewSafeAreaInsetsDidChange()
 		
 		screenWidth = UIScreen.main.bounds.width
 		let leftSafeAreaHeight = view.safeAreaInsets.left
