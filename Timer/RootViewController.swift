@@ -165,6 +165,9 @@ class RootViewController: UIViewController {
 		// alarm starts after 5 seconds.
 		alarmSec = -5
 
+		// start resting cycle.
+		countLabel.textColor = UIColor.white
+
 		// in order to correct hou
 		updateCounting()
 	}
@@ -191,6 +194,13 @@ class RootViewController: UIViewController {
 			AudioServicesPlayAlertSound(SystemSoundID(1322))
 			if alarmSec % 60 != 0 {
 				exe += 1
+				
+				// start resting cycle.
+				countLabel.textColor = UIColor.white
+
+			} else {
+				// start exercise cycle.
+				countLabel.textColor = UIColor.green
 			}
 		}
 		
