@@ -27,15 +27,12 @@ class RootViewController: UIViewController {
 	// ui members
 	
 	@IBOutlet weak var hourLabel: UILabel!
-	@IBOutlet weak var afterHourLabel: UILabel!
-	
-	@IBOutlet weak var minLabel: UILabel!
-	@IBOutlet weak var afterMinLabel: UILabel!
-	
-	@IBOutlet weak var secLabel: UILabel!
 	
 	@IBOutlet weak var countLabel: UILabel!
+	@IBOutlet weak var afterCountLabel: UILabel!
 	@IBOutlet weak var exeLabel: UILabel!
+	
+	@IBOutlet weak var pauseButton: UIButton!
 	
 	// instance members
 	var hour = 0
@@ -46,6 +43,45 @@ class RootViewController: UIViewController {
 	
 //	var timer: Timer?
 	var totalWidth: CGFloat?
+	var timer: Timer?
+	
+	// UI methods
+	
+	func processPauseButton() {
+		
+		if let t = timer {
+			timer = nil
+			t.invalidate()
+			pauseButton.setTitle("Play", for: .normal)
+			
+		} else {
+			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
+				
+				self.updateCounting()
+			}
+			pauseButton.setTitle("Pause", for: .normal)
+		}
+	}
+	
+	@IBAction func pauseButtonPressed(_ sender: UIButton) {
+		
+		processPauseButton()
+	}
+	
+	@IBAction func resetButtonPressed(_ sender: UIButton) {
+		
+		if let t = timer {
+			// was playing
+			timer = nil
+			t.invalidate()
+			
+		}
+		
+		processPauseButton()
+
+		exe = 0
+		becomeForeground()
+	}
 	
 	// system methods
 	
@@ -55,7 +91,6 @@ class RootViewController: UIViewController {
 		print("\(getTimeMS()) viewWillAppear()")
 	}
 
-	
 	@available(iOS 11.0, *)
 	override func viewSafeAreaInsetsDidChange() {
 		
@@ -72,11 +107,7 @@ class RootViewController: UIViewController {
 		super.viewDidLayoutSubviews()
 		
 		if totalWidth == nil {
-			totalWidth = hourLabel.intrinsicContentSize.width +
-				afterHourLabel.intrinsicContentSize.width +
-				minLabel.intrinsicContentSize.width +
-				afterMinLabel.intrinsicContentSize.width +
-				secLabel.intrinsicContentSize.width
+			totalWidth = hourLabel.intrinsicContentSize.width
 			
 			print("\(getTimeMS()) viewDidLayoutSubviews(): totalWidth: \(totalWidth!)")
 		}
@@ -103,12 +134,9 @@ class RootViewController: UIViewController {
 		let fontSize: CGFloat = 100.0 * safeAreaWidth / totalWidth!
 		
 		hourLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		afterHourLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		minLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		afterMinLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		secLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
 		
 		countLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
+		afterCountLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
 		exeLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
 		
 		print("\(getTimeMS()) changeFontSize(): \(fontSize)")
@@ -122,10 +150,7 @@ class RootViewController: UIViewController {
 		becomeForeground()
 		showLabels()
 
-		Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
-			
-			self.updateCounting()
-		}
+		processPauseButton()
 
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
@@ -175,26 +200,18 @@ class RootViewController: UIViewController {
 		}
 	}
 	
+	func getWith0(_ unit: Int) -> String {
+		
+		if unit < 10 {
+			return "0\(unit)"
+		} else {
+			return String(unit)
+		}
+	}
+	
 	func showLabels() {
 		
-		if hour < 10 {
-			hourLabel.text = "0\(hour)"
-		} else {
-			hourLabel.text = String(hour)
-		}
-		
-		if min < 10 {
-			minLabel.text = "0\(min)"
-		} else {
-			minLabel.text = String(min)
-		}
-		
-		if sec < 10 {
-			secLabel.text = "0\(sec)"
-			
-		} else {
-			secLabel.text = String(sec)
-		}
+		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
 		
 		countLabel.text = String(alarmSec % 30)
 		exeLabel.text = String(exe)
