@@ -190,10 +190,10 @@ class RootViewController: UIViewController {
 		
 		alarmSec += 1
 		
-		// alarm beeps every 30 seconds.
-		if alarmSec % 30 == 0 {
+		// alarm beeps every 30 minutes.
+		if alarmSec % (30 * 60) == 0 {
 			AudioServicesPlayAlertSound(SystemSoundID(1322))
-			if alarmSec % 60 != 0 {
+			if alarmSec % (60 * 60) != 0 {
 				exe += 1
 				
 				// start resting cycle.
@@ -224,7 +224,11 @@ class RootViewController: UIViewController {
 		
 		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
 		
-		countLabel.text = String(alarmSec % 30)
+		// show min:sec format...
+		let secs = alarmSec % (30 * 60)
+		let min = Int(secs / 60)
+		let sec = secs - min * 60
+		countLabel.text = "\(min):\(sec)"
 		exeLabel.text = String(exe)
 	}
 	
