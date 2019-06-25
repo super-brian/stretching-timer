@@ -85,6 +85,12 @@ class RootViewController: UIViewController {
 	
 	// system methods
 	
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		
+		UIApplication.shared.isIdleTimerDisabled = true
+	}
+	
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
@@ -192,7 +198,7 @@ class RootViewController: UIViewController {
 		
 		// alarm beeps every 30 minutes.
 		if alarmSec % (30 * 60) == 0 {
-			AudioServicesPlayAlertSound(SystemSoundID(1322))
+			AudioServicesPlayAlertSound(SystemSoundID(1027))
 			if alarmSec % (60 * 60) != 0 {
 				exe += 1
 				
