@@ -76,9 +76,15 @@ class RootViewController: UIViewController {
 		// reset execution count.
 		exe = 0
 
+		// show now.
+		self.setTimeVariables()
+		self.showAndBeep()
+		
 		// pause and play again.
 		processPauseButton()
-		processPauseButton()
+		if timer == nil {
+			processPauseButton()
+		}
 	}
 	
 	// system methods
