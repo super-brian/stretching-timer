@@ -17,8 +17,6 @@ import AVFoundation
 
 class RootViewController: UIViewController {
 	
-	// static members
-	
 	// screen size
 	var screenWidth: CGFloat = -1
 	var prevScreenWidth: CGFloat = -2
@@ -57,7 +55,8 @@ class RootViewController: UIViewController {
 		} else {
 			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
 				
-				self.updateCounting()
+				self.setTimeVariables()
+				self.showAndBeep()
 			}
 			pauseButton.setTitle("Pause", for: .normal)
 		}
@@ -69,26 +68,52 @@ class RootViewController: UIViewController {
 	}
 	
 	@IBAction func resetButtonPressed(_ sender: UIButton) {
-		
-		if let t = timer {
-			// was playing
-			timer = nil
-			t.invalidate()
-			
-		}
-		
-		processPauseButton()
 
+		// we save a new start date.
+		let startDate = Date()
+		UserDefaults.standard.set(startDate, forKey: "start_date")
+		
+		// reset execution count.
 		exe = 0
-		becomeForeground()
+
+		// pause and play again.
+		processPauseButton()
+		processPauseButton()
 	}
 	
 	// system methods
 	
+	/* make the timer resume when become foreground - as if it was counting while in background.
+	for this, we save 'startDate' whenever timer starts afresh. */
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		UIApplication.shared.isIdleTimerDisabled = true
+		print("\(getTimeMS()) viewWillAppear()")
+
+		// get current date and save it.
+		let startDate = Date()
+		UserDefaults.standard.set(startDate, forKey: "start_date")
+		
+		// set time variables & show them.
+		setTimeVariables()
+		showAndBeep()
+		
+		// start timer that runs continuously.
+		processPauseButton()
+	}
+	
+	func setTimeVariables() {
+		
+		// set time variables.
+		let calendar = Calendar.current
+		let nowDate = Date()
+
+		hour = calendar.component(.hour, from: nowDate)
+		min  = calendar.component(.minute, from: nowDate)
+		sec  = calendar.component(.second, from: nowDate)
+		
+		let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
+		alarmSec = Int(nowDate.timeIntervalSince1970 - startDate.timeIntervalSince1970)
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -154,48 +179,14 @@ class RootViewController: UIViewController {
 		
 		print("\(getTimeMS()) viewDidAppear()")
 		
-		becomeForeground()
-		showLabels()
-
-		processPauseButton()
-
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
 	
 	@objc func becomeForeground() {
-		
-		let now = Calendar.current.dateComponents([.hour, .minute, .second], from: Date())
-		hour = now.hour!
-		min = now.minute!
-		sec = now.second! - 1
-		
-		// alarm starts after 5 seconds.
-		alarmSec = -5
-
-		// start resting cycle.
-		countLabel.textColor = UIColor.white
-
-		// in order to correct hou
-		updateCounting()
 	}
 	
-	@objc func updateCounting() {
-		
-		sec += 1
-		if sec == 60 {
-			sec = 0
-			min += 1
-		}
-		if min == 60 {
-			min = 0
-			hour += 1
-		}
-		if hour > 12 {
-			hour -= 12
-		}
-		
-		alarmSec += 1
-		
+	func showAndBeep() {
+
 		// alarm beeps every 30 minutes.
 		if alarmSec % (30 * 60) == 0 {
 			AudioServicesPlayAlertSound(SystemSoundID(1027))
@@ -217,15 +208,6 @@ class RootViewController: UIViewController {
 		}
 	}
 	
-	func getWith0(_ unit: Int) -> String {
-		
-		if unit < 10 {
-			return "0\(unit)"
-		} else {
-			return String(unit)
-		}
-	}
-	
 	func showLabels() {
 		
 		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
@@ -236,6 +218,15 @@ class RootViewController: UIViewController {
 		let sec = secs - min * 60
 		countLabel.text = "\(min):\(sec)"
 		exeLabel.text = String(exe)
+	}
+	
+	func getWith0(_ unit: Int) -> String {
+		
+		if unit < 10 {
+			return "0\(unit)"
+		} else {
+			return String(unit)
+		}
 	}
 	
 	func getTimeMS(_ date: Date = Date()) -> String {
