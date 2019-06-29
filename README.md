@@ -1,5 +1,7 @@
 # stretching-timer
-A simple timer for stretching
+This repository has two branches, master: (Stretching timer) and standing: (Standing timer) which are similar.
+Both are simple timers, the reason for making these is to make them generate some beep / sound when I need to rest/start every 30 seconds. (or for standing timer, stand or sit every 30 minutes)
+Below are for stretching timer, but standing timer is almost the same except that interval is 30 minutes.
 
 **Introduction**
 
