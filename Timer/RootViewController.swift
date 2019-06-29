@@ -50,11 +50,13 @@ class RootViewController: UIViewController {
 	func processPauseButton() {
 		
 		if let t = timer {
+			// pause button pressed.
 			timer = nil
 			t.invalidate()
 			pauseButton.setTitle("Play", for: .normal)
 			
 		} else {
+			// play button pressed.
 			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
 				
 				self.setTimeVariables()
@@ -69,6 +71,7 @@ class RootViewController: UIViewController {
 		processPauseButton()
 	}
 	
+	// what if... reset is pressed while paused?
 	@IBAction func resetButtonPressed(_ sender: UIButton) {
 		
 		// we save a new start date.
@@ -77,10 +80,16 @@ class RootViewController: UIViewController {
 		
 		// reset execution count.
 		exe = 0
+
+		// show now.
+		self.setTimeVariables()
+		self.showAndBeep()
 		
 		// pause and play again.
 		processPauseButton()
-		processPauseButton()
+		if timer == nil {
+			processPauseButton()
+		}
 	}
 	
 	// system methods
