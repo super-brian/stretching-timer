@@ -187,6 +187,9 @@ class RootViewController: UIViewController {
 		
 		print("\(getTimeMS()) viewDidAppear()")
 		
+		// keep screen on.
+		UIApplication.shared.isIdleTimerDisabled = true
+		
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
