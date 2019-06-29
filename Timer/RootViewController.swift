@@ -17,6 +17,8 @@ import AVFoundation
 
 class RootViewController: UIViewController {
 	
+	var backgroundDate: Date?
+
 	// screen size
 	var screenWidth: CGFloat = -1
 	var prevScreenWidth: CGFloat = -2
@@ -185,10 +187,36 @@ class RootViewController: UIViewController {
 		
 		print("\(getTimeMS()) viewDidAppear()")
 		
+		NotificationCenter.default.addObserver(self, selector: #selector(becomeBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 	}
 	
+	@objc func becomeBackground() {
+		
+		print("\(getTimeMS()) becomeBackground()")
+
+		// we save background date.
+		backgroundDate = Date()
+
+		foregroundWork = true;
+	}
+	
+	var foregroundWork = false;
+	
 	@objc func becomeForeground() {
+		
+		print("\(getTimeMS()) becomeForeground()")
+		
+		// when become foreground, we calculate the time difference.
+		if let bDate = backgroundDate {
+			let diffSec = Date().timeIntervalSince1970 - bDate.timeIntervalSince1970
+			// then apply to the startDate.
+			let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
+			let newDate = Date(timeIntervalSince1970: startDate.timeIntervalSince1970 + diffSec)
+			UserDefaults.standard.set(newDate, forKey: "start_date")
+		}
+		
+		foregroundWork = false;
 	}
 	
 	func showAndBeep() {
@@ -215,6 +243,12 @@ class RootViewController: UIViewController {
 	}
 	
 	func showLabels() {
+		
+		print("\(getTimeMS()) showLabels()")
+		
+		guard foregroundWork == false else {
+			return
+		}
 		
 		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
 		
