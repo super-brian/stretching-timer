@@ -34,6 +34,12 @@
                                     <action selector="pauseButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2JK-4u-Abk"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wt0-xJ-2fI" userLabel="Bettery Level">
+                                <rect key="frame" x="177" y="535.5" width="60" height="36"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALt-Ue-VhD" userLabel="Reset">
                                 <rect key="frame" x="290" y="529.5" width="74" height="48"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -71,6 +77,7 @@
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="ALt-Ue-VhD" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-50" id="1pL-gG-hV8"/>
+                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="centerY" secondItem="TQ8-ZJ-6i1" secondAttribute="centerY" id="3eM-AC-Y1u"/>
                             <constraint firstItem="GuY-tX-bGP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4PI-Vk-aJk"/>
                             <constraint firstItem="p4e-ps-1XM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Wba-sg-w7h"/>
                             <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="top" secondItem="GuY-tX-bGP" secondAttribute="bottom" constant="-20" id="c9X-eZ-3A3"/>
@@ -78,12 +85,14 @@
                             <constraint firstItem="p4e-ps-1XM" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fEa-Mw-wcP"/>
                             <constraint firstItem="ALt-Ue-VhD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TQ8-ZJ-6i1" secondAttribute="trailing" constant="8" id="n7y-Nu-oDh"/>
                             <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="o5H-Ad-bWz"/>
+                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uA9-DK-7lx"/>
                             <constraint firstItem="ALt-Ue-VhD" firstAttribute="top" secondItem="GuY-tX-bGP" secondAttribute="bottom" constant="-20" id="zid-ZX-fma"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="afterCountLabel" destination="M6j-OF-nlZ" id="71g-Aw-w6D"/>
+                        <outlet property="batteryLabel" destination="Wt0-xJ-2fI" id="zZ3-Em-qWi"/>
                         <outlet property="countLabel" destination="nlH-69-cuc" id="vHi-8x-0fX"/>
                         <outlet property="exeLabel" destination="4Td-U2-w8Z" id="DLH-Fp-1aj"/>
                         <outlet property="hourLabel" destination="p4e-ps-1XM" id="ycC-i4-UvN"/>
