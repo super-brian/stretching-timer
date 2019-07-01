@@ -34,6 +34,9 @@ class RootViewController: UIViewController {
 	
 	@IBOutlet weak var pauseButton: UIButton!
 	
+	@IBOutlet weak var batteryLabel: UILabel!
+	
+	
 	// instance members
 	var hour = 0
 	var min = 0
@@ -44,6 +47,11 @@ class RootViewController: UIViewController {
 //	var timer: Timer?
 	var totalWidth: CGFloat?
 	var timer: Timer?
+	
+	var batteryLevel: Float {
+		
+		return UIDevice.current.batteryLevel
+	}
 	
 	// UI methods
 	
@@ -108,6 +116,10 @@ class RootViewController: UIViewController {
 		
 		// start timer that runs continuously.
 		processPauseButton()
+		
+		// show battery percentage.
+		UIDevice.current.isBatteryMonitoringEnabled = true
+		batteryLabel.text = "\(Int(batteryLevel * 100))%"
 	}
 	
 	func setTimeVariables() {
@@ -192,6 +204,13 @@ class RootViewController: UIViewController {
 		
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+		
+		NotificationCenter.default.addObserver(self, selector: #selector(batteryLevelDidChange), name: UIDevice.batteryLevelDidChangeNotification, object: nil)
+	}
+	
+	@objc func batteryLevelDidChange(_ notification: Notification) {
+		
+		batteryLabel.text = "\(Int(batteryLevel * 100))%"
 	}
 	
 	@objc func becomeBackground() {
