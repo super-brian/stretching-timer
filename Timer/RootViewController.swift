@@ -48,9 +48,9 @@ class RootViewController: UIViewController {
 	var totalWidth: CGFloat?
 	var timer: Timer?
 	
-	var batteryLevel: Float {
+	var batteryLevel: String {
 		
-		return UIDevice.current.batteryLevel
+		return "\(Int(UIDevice.current.batteryLevel * 100))%"
 	}
 	
 	// UI methods
@@ -122,7 +122,7 @@ class RootViewController: UIViewController {
 		
 		// show battery percentage.
 		UIDevice.current.isBatteryMonitoringEnabled = true
-		batteryLabel.text = "\(Int(batteryLevel * 100))%"
+		batteryLabel.text = batteryLevel
 	}
 	
 	func setTimeVariables() {
@@ -213,7 +213,7 @@ class RootViewController: UIViewController {
 	
 	@objc func batteryLevelDidChange(_ notification: Notification) {
 		
-		batteryLabel.text = "\(Int(batteryLevel * 100))%"
+		batteryLabel.text = batteryLevel
 	}
 	
 	@objc func becomeBackground() {
