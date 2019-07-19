@@ -63,8 +63,19 @@ class RootViewController: UIViewController {
 			t.invalidate()
 			pauseButton.setTitle("Play", for: .normal)
 			
+			let pauseDate = Date()
+			UserDefaults.standard.set(pauseDate, forKey: "pause_date")
+			
 		} else {
 			// play button pressed.
+			
+			// move start date as much as now - pauseDate.
+			let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
+			let pauseDate = UserDefaults.standard.object(forKey: "pause_date") as! Date
+			let dateDiff = Date().timeIntervalSince1970 - pauseDate.timeIntervalSince1970
+			let newStartDate = startDate.addingTimeInterval(dateDiff)
+			UserDefaults.standard.set(newStartDate, forKey: "start_date")
+			
 			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
 				
 				self.setTimeVariables()
