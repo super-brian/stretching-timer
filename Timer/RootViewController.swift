@@ -67,14 +67,15 @@ class RootViewController: UIViewController {
 			UserDefaults.standard.set(pauseDate, forKey: "pause_date")
 			
 		} else {
-			// play button pressed.
+			// play button pressed. (or viewDidLoad() called this)
 			
 			// move start date as much as now - pauseDate.
-			let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
-			let pauseDate = UserDefaults.standard.object(forKey: "pause_date") as! Date
-			let dateDiff = Date().timeIntervalSince1970 - pauseDate.timeIntervalSince1970
-			let newStartDate = startDate.addingTimeInterval(dateDiff)
-			UserDefaults.standard.set(newStartDate, forKey: "start_date")
+			if let pauseDate = UserDefaults.standard.object(forKey: "pause_date") as? Date {
+				let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
+				let dateDiff = Date().timeIntervalSince1970 - pauseDate.timeIntervalSince1970
+				let newStartDate = startDate.addingTimeInterval(dateDiff)
+				UserDefaults.standard.set(newStartDate, forKey: "start_date")
+			}
 			
 			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
 				
