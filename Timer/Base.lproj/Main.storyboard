@@ -18,75 +18,96 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:22:22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p4e-ps-1XM" userLabel="Hour">
-                                <rect key="frame" x="-34" y="336.5" width="482" height="116.5"/>
-                                <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
-                                <color key="textColor" red="0.29411764709999999" green="0.74117647060000003" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TQ8-ZJ-6i1" userLabel="Pause">
-                                <rect key="frame" x="50" y="529.5" width="79" height="48"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <state key="normal" title="Pause">
-                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="pauseButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2JK-4u-Abk"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wt0-xJ-2fI" userLabel="Bettery Level">
-                                <rect key="frame" x="177" y="535.5" width="60" height="36"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALt-Ue-VhD" userLabel="Reset">
-                                <rect key="frame" x="290" y="529.5" width="74" height="48"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <state key="normal" title="Reset">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
-                                <connections>
-                                    <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fd0-gH-TaB"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GuY-tX-bGP">
-                                <rect key="frame" x="86.5" y="433" width="241.5" height="116.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="QMJ-Qc-bBl">
+                                <rect key="frame" x="0.0" y="330.5" width="414" height="235"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlH-69-cuc" userLabel="Count">
-                                        <rect key="frame" x="0.0" y="0.0" width="120.5" height="116.5"/>
-                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
-                                        <color key="textColor" red="0.29411764709999999" green="0.74117647060000003" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12:22:22" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p4e-ps-1XM" userLabel="Hour">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="58.5"/>
+                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="50"/>
+                                        <color key="textColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
+                                        <size key="shadowOffset" width="0.0" height="0.0"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="," textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6j-OF-nlZ" userLabel="afterCount">
-                                        <rect key="frame" x="120.5" y="0.0" width="60.5" height="116.5"/>
-                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
-                                        <color key="textColor" red="0.29411764709999999" green="0.74117647060000003" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Td-U2-w8Z" userLabel="Execution">
-                                        <rect key="frame" x="181" y="0.0" width="60.5" height="116.5"/>
-                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
-                                        <color key="textColor" red="0.29411764709999999" green="0.74117647060000003" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GuY-tX-bGP" userLabel="Row 2 Stack View">
+                                        <rect key="frame" x="86.5" y="58.5" width="241.5" height="116.5"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nlH-69-cuc" userLabel="Count">
+                                                <rect key="frame" x="0.0" y="0.0" width="120.5" height="116.5"/>
+                                                <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
+                                                <color key="textColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="," textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M6j-OF-nlZ" userLabel="afterCount">
+                                                <rect key="frame" x="120.5" y="0.0" width="60.5" height="116.5"/>
+                                                <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
+                                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Td-U2-w8Z" userLabel="Execution">
+                                                <rect key="frame" x="181" y="0.0" width="60.5" height="116.5"/>
+                                                <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="100"/>
+                                                <color key="textColor" red="1" green="0.52120530610000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ffg-j1-qnw" userLabel="Row 3 View">
+                                        <rect key="frame" x="0.0" y="175" width="414" height="60"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TQ8-ZJ-6i1" userLabel="Pause">
+                                                <rect key="frame" x="64" y="6" width="79" height="48"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="Pause">
+                                                    <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="pauseButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2JK-4u-Abk"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wt0-xJ-2fI" userLabel="Bettery Level">
+                                                <rect key="frame" x="177" y="0.0" width="60" height="60"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="60" id="aYg-A9-YJj"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALt-Ue-VhD" userLabel="Reset">
+                                                <rect key="frame" x="273.5" y="6" width="74" height="48"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="Reset">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="fd0-gH-TaB"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="Wt0-xJ-2fI" secondAttribute="bottom" id="0Yt-pg-bNi"/>
+                                            <constraint firstItem="ALt-Ue-VhD" firstAttribute="centerY" secondItem="ffg-j1-qnw" secondAttribute="centerY" id="Fee-0d-Q0f"/>
+                                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="centerX" secondItem="ffg-j1-qnw" secondAttribute="centerX" id="JJe-Et-fqY"/>
+                                            <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="centerY" secondItem="ffg-j1-qnw" secondAttribute="centerY" id="TE3-Ke-dCb"/>
+                                            <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="centerX" secondItem="ffg-j1-qnw" secondAttribute="centerX" multiplier="0.5" id="ZOp-cz-kzf"/>
+                                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="top" secondItem="ffg-j1-qnw" secondAttribute="top" id="gmQ-cb-MVY"/>
+                                            <constraint firstItem="ALt-Ue-VhD" firstAttribute="centerX" secondItem="ffg-j1-qnw" secondAttribute="centerX" multiplier="1.5" id="knz-gH-6x6"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="p4e-ps-1XM" secondAttribute="trailing" id="LFm-TW-6BA"/>
+                                    <constraint firstItem="p4e-ps-1XM" firstAttribute="leading" secondItem="QMJ-Qc-bBl" secondAttribute="leading" id="QqP-CL-LLt"/>
+                                    <constraint firstAttribute="trailing" secondItem="ffg-j1-qnw" secondAttribute="trailing" id="xJA-a7-pyH"/>
+                                    <constraint firstItem="ffg-j1-qnw" firstAttribute="leading" secondItem="QMJ-Qc-bBl" secondAttribute="leading" id="zzD-P1-ykj"/>
+                                </constraints>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="ALt-Ue-VhD" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" constant="-50" id="1pL-gG-hV8"/>
-                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="centerY" secondItem="TQ8-ZJ-6i1" secondAttribute="centerY" id="3eM-AC-Y1u"/>
-                            <constraint firstItem="GuY-tX-bGP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4PI-Vk-aJk"/>
-                            <constraint firstItem="p4e-ps-1XM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Wba-sg-w7h"/>
-                            <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="top" secondItem="GuY-tX-bGP" secondAttribute="bottom" constant="-20" id="c9X-eZ-3A3"/>
-                            <constraint firstItem="GuY-tX-bGP" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-20" id="dcI-W8-feh"/>
-                            <constraint firstItem="p4e-ps-1XM" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fEa-Mw-wcP"/>
-                            <constraint firstItem="ALt-Ue-VhD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="TQ8-ZJ-6i1" secondAttribute="trailing" constant="8" id="n7y-Nu-oDh"/>
-                            <constraint firstItem="TQ8-ZJ-6i1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="50" id="o5H-Ad-bWz"/>
-                            <constraint firstItem="Wt0-xJ-2fI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="uA9-DK-7lx"/>
-                            <constraint firstItem="ALt-Ue-VhD" firstAttribute="top" secondItem="GuY-tX-bGP" secondAttribute="bottom" constant="-20" id="zid-ZX-fma"/>
+                            <constraint firstItem="QMJ-Qc-bBl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="26h-wQ-bH4"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="QMJ-Qc-bBl" secondAttribute="trailing" id="FAO-LK-gzo"/>
+                            <constraint firstItem="QMJ-Qc-bBl" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fcG-fd-pvt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

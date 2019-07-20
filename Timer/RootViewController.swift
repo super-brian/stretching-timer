@@ -20,9 +20,10 @@ class RootViewController: UIViewController {
 	var backgroundDate: Date?
 	
 	// screen size
-	var screenWidth: CGFloat = -1
 	var prevScreenWidth: CGFloat = -2
-	var safeAreaWidth: CGFloat = -1
+	
+	var hourLabelInitialWidth: CGFloat = -1
+	var hourLabelInitialHeight: CGFloat = -1
 	
 	// ui members
 	
@@ -41,11 +42,7 @@ class RootViewController: UIViewController {
 	var hour = 0
 	var min = 0
 	var sec = 0
-	var alarmSec = 0 {
-		didSet {
-			print("alarmSec: \(oldValue) > \(alarmSec)")
-		}
-	}
+	var alarmSec = 0
 	var exe = 0
 	
 //	var timer: Timer?
@@ -106,6 +103,9 @@ class RootViewController: UIViewController {
 		super.viewDidLoad()
 		
 		print("\(getTimeMS()) viewWillAppear()")
+		
+//		hourLabel.adjustsFontSizeToFitWidth = true
+//		hourLabel.minimumScaleFactor = 10 / UIFont.labelFontSize
 		
 		// initialize and show first time.
 		resetDefaults()
@@ -230,56 +230,51 @@ class RootViewController: UIViewController {
 		print("\(getTimeMS()) viewWillAppear()")
 	}
 
-	@available(iOS 11.0, *)
-	override func viewSafeAreaInsetsDidChange() {
-		super.viewSafeAreaInsetsDidChange()
-		
-		screenWidth = UIScreen.main.bounds.width
-		let leftSafeAreaHeight = view.safeAreaInsets.left
-		let rightSafeAreaHeight = view.safeAreaInsets.right
-
-		safeAreaWidth = screenWidth - leftSafeAreaHeight - rightSafeAreaHeight
-		
-		print("\(getTimeMS()) viewSafeAreaInsetsDidChange(): orientation \(UIDevice.current.orientation.isLandscape ? "landscape" : "portrait") screenWidth \(screenWidth) leftSafeAreaHeight \(leftSafeAreaHeight) rightSafeAreaHeight \(rightSafeAreaHeight) safeAreaWidth \(safeAreaWidth)")
-	}
-	
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		
-		if totalWidth == nil {
-			totalWidth = hourLabel.intrinsicContentSize.width
-			
-			print("\(getTimeMS()) viewDidLayoutSubviews(): totalWidth: \(totalWidth!)")
-		}
-		
-		if screenWidth == -1 {
-			screenWidth = UIScreen.main.bounds.width
-			let leftSafeAreaHeight = view.safeAreaInsets.left
-			let rightSafeAreaHeight = view.safeAreaInsets.right
-			
-			safeAreaWidth = screenWidth - leftSafeAreaHeight - rightSafeAreaHeight
-			
-			print("\(getTimeMS()) viewDidLayoutSubviews(): orientation \(UIDevice.current.orientation.isLandscape ? "landscape" : "portrait") screenWidth \(screenWidth) leftSafeAreaHeight \(leftSafeAreaHeight) rightSafeAreaHeight \(rightSafeAreaHeight) safeAreaWidth \(safeAreaWidth)")
-		}
-		
+		let screenWidth = UIScreen.main.bounds.width
+		// since thie method may be called multiple times, in order to avoid that...
 		if screenWidth != prevScreenWidth {
+			// save new value to previous variable.
 			prevScreenWidth = screenWidth
-			changeFontSize()
+			let leftSafeAreaWidth = view.safeAreaInsets.left
+			let rightSafeAreaWidth = view.safeAreaInsets.right
+			let safeAreaWidth = screenWidth - leftSafeAreaWidth - rightSafeAreaWidth
+			
+			print("\(getTimeMS()) viewDidLayoutSubviews(): orientation \(UIDevice.current.orientation.isLandscape ? "landscape" : "portrait") screenWidth \(screenWidth) leftSafeAreaWidth \(leftSafeAreaWidth) rightSafeAreaWidth \(rightSafeAreaWidth) safeAreaWidth \(safeAreaWidth)")
+
+			let screenHeight = UIScreen.main.bounds.height
+			let topSafeAreaHeight = view.safeAreaInsets.top
+			let bottomSafeAreaHeight = view.safeAreaInsets.bottom
+			let safeAreaHeight = screenHeight - topSafeAreaHeight - bottomSafeAreaHeight
+
+			print("\(getTimeMS()) viewDidLayoutSubviews(): screenHeight \(screenHeight) topSafeAreaHeight \(topSafeAreaHeight) bottomSafeAreaHeight \(bottomSafeAreaHeight) safeAreaHeight \(safeAreaHeight)")
+
+			if hourLabelInitialWidth < 0 {
+				hourLabelInitialWidth = hourLabel.intrinsicContentSize.width
+				hourLabelInitialHeight = hourLabel.intrinsicContentSize.height
+				print("\(getTimeMS()) viewDidLayoutSubviews(): hourLabelInitialWidth: \(hourLabelInitialWidth)")
+			}
+			
+			// we need to get the right font size considering width and height.
+			var fontSize: CGFloat = 50.0 * safeAreaWidth / hourLabelInitialWidth
+			let totalHeight: CGFloat = hourLabelInitialHeight / 50.0 * fontSize * 2 + 60
+			if totalHeight > safeAreaHeight {
+				// need to decrease font size.
+				fontSize = 50 / hourLabelInitialHeight * (safeAreaHeight - 60) / 2
+			}
+			
+			// monospace font: see https://stackoverflow.com/a/22620172/8963597
+			hourLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
+			
+			// same size to row 2 labels.
+			countLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
+			afterCountLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
+			exeLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
+			
+			print("\(getTimeMS()) viewDidLayoutSubviews(): new font size: \(fontSize)")
 		}
-	}
-	
-	// monospace font: see https://stackoverflow.com/a/22620172/8963597
-	func changeFontSize() {
-		
-		let fontSize: CGFloat = 100.0 * safeAreaWidth / totalWidth!
-		
-		hourLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		
-		countLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		afterCountLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		exeLabel.font = UIFont(name: "Menlo-Bold", size: fontSize)
-		
-		print("\(getTimeMS()) changeFontSize(): \(fontSize)")
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -290,9 +285,13 @@ class RootViewController: UIViewController {
 		// keep screen on.
 		UIApplication.shared.isIdleTimerDisabled = true
 
+		// background
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+		
+		// foreground
 		NotificationCenter.default.addObserver(self, selector: #selector(becomeForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 		
+		// battery level
 		NotificationCenter.default.addObserver(self, selector: #selector(batteryLevelDidChange), name: UIDevice.batteryLevelDidChangeNotification, object: nil)
 	}
 	
@@ -334,7 +333,5 @@ class RootViewController: UIViewController {
 		
 		isInBackground = false;
 	}
-	
-
 }
 
