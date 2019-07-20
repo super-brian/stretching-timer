@@ -41,12 +41,18 @@ class RootViewController: UIViewController {
 	var hour = 0
 	var min = 0
 	var sec = 0
-	var alarmSec = 0
+	var alarmSec = 0 {
+		didSet {
+			print("alarmSec: \(oldValue) > \(alarmSec)")
+		}
+	}
 	var exe = 0
 	
 //	var timer: Timer?
 	var totalWidth: CGFloat?
 	var timer: Timer?
+	
+	var isPaused = false
 	
 	var batteryLevel: String {
 		
@@ -56,10 +62,10 @@ class RootViewController: UIViewController {
 	// UI methods
 	@IBAction func pauseButtonPressed(_ sender: UIButton) {
 		
-		if let t = timer {
+		if let label = sender.titleLabel?.text, label == "Pause" {
 			// pause button pressed.
-			timer = nil
-			t.invalidate()
+			
+			isPaused = true
 			
 			let pauseDate = Date()
 			UserDefaults.standard.set(pauseDate, forKey: "pause_date")
@@ -71,13 +77,16 @@ class RootViewController: UIViewController {
 			
 			// move start date as much as now - pauseDate.
 			if let pauseDate = UserDefaults.standard.object(forKey: "pause_date") as? Date {
-				let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
 				let dateDiff = Date().timeIntervalSince1970 - pauseDate.timeIntervalSince1970
+				print("pauseButtonPressed(): dateDiff: \(dateDiff)")
+				
+				let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
 				let newStartDate = startDate.addingTimeInterval(dateDiff)
 				UserDefaults.standard.set(newStartDate, forKey: "start_date")
+				UserDefaults.standard.removeObject(forKey: "pause_date")
 			}
-			
-			startTimer()
+
+			isPaused = false
 			
 			pauseButton.setTitle("Pause", for: .normal)
 		}
@@ -86,44 +95,9 @@ class RootViewController: UIViewController {
 	// what if... reset is pressed while paused?
 	@IBAction func resetButtonPressed(_ sender: UIButton) {
 		
-		getStarted()
+		resetDefaults()
 	}
-	
-	// from viewDidLoad(), resetButtonPressed()
-	func getStarted() {
 
-		// we save a new start date.
-		let startDate = Date()
-		UserDefaults.standard.set(startDate, forKey: "start_date")
-		UserDefaults.standard.removeObject(forKey: "pause_date")
-		
-		// reset execution count.
-		exe = 0
-		
-		// show now.
-		self.setTimeVariables()
-		self.showAndBeep()
-		
-		// stop timer if it was working.
-		if let t = timer {
-			timer = nil
-			t.invalidate()
-		}
-		
-		// start timer.
-		startTimer()
-	}
-	
-	// from getStarted(), pauseButtonPressed()
-	func startTimer() {
-		
-		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
-			
-			self.setTimeVariables()
-			self.showAndBeep()
-		}
-	}
-	
 	// system methods
 	
 	/* make the timer resume when become foreground - as if it was counting while in background.
@@ -133,14 +107,33 @@ class RootViewController: UIViewController {
 		
 		print("\(getTimeMS()) viewWillAppear()")
 		
-		getStarted()
+		// initialize and show first time.
+		resetDefaults()
+		
+		// start timer
+		startTimer()
 		
 		// show battery percentage.
 		UIDevice.current.isBatteryMonitoringEnabled = true
 		batteryLabel.text = batteryLevel
 	}
 	
-	func setTimeVariables() {
+	// from viewDidLoad(), resetButtonPressed()
+	func resetDefaults() {
+		
+		// we save a new start date.
+		UserDefaults.standard.set(Date(), forKey: "start_date")
+		UserDefaults.standard.removeObject(forKey: "pause_date")
+		
+		// reset execution count.
+		exe = 0
+		
+		// show now.
+		self.setTimeAndShow()
+		self.setAlarmSecAndBeepShow()
+	}
+	
+	func setTimeAndShow() {
 		
 		// set time variables.
 		let calendar = Calendar.current
@@ -150,8 +143,85 @@ class RootViewController: UIViewController {
 		min  = calendar.component(.minute, from: nowDate)
 		sec  = calendar.component(.second, from: nowDate)
 		
+		DispatchQueue.main.async {
+			
+			self.showTime()
+		}
+	}
+	
+	func showTime() {
+		
+		guard isInBackground == false else {
+			return
+		}
+		
+		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
+	}
+	
+	func setAlarmSecAndBeepShow() {
+		
 		let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
-		alarmSec = Int(nowDate.timeIntervalSince1970 - startDate.timeIntervalSince1970)
+		alarmSec = Int(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)
+		
+		// alarm beeps every 30 seconds
+		if alarmSec % 30 == 0 {
+			AudioServicesPlayAlertSound(SystemSoundID(1322))
+			if alarmSec % 60 != 0 {
+				exe += 1
+				
+				// start resting cycle.
+				countLabel.textColor = UIColor.white
+				
+			} else {
+				// start exercise cycle.
+				countLabel.textColor = UIColor.green
+			}
+		}
+		
+		DispatchQueue.main.async {
+			
+			self.showAlarmSec()
+		}
+	}
+	
+	func showAlarmSec() {
+		
+		guard isInBackground == false else {
+			return
+		}
+		
+		// show min:sec format...
+		countLabel.text = String(alarmSec % 30)
+		exeLabel.text = String(exe)
+	}
+	
+	func getWith0(_ unit: Int) -> String {
+		
+		if unit < 10 {
+			return "0\(unit)"
+		} else {
+			return String(unit)
+		}
+	}
+	
+	func getTimeMS(_ date: Date = Date()) -> String {
+		
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat = "y-MM-dd HH:mm:ss.SSS"
+		let res = dateFormatter.string(from: date)
+		
+		return res
+	}
+	
+	func startTimer() {
+		
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
+			
+			self.setTimeAndShow()
+			if self.isPaused == false {
+				self.setAlarmSecAndBeepShow()
+			}
+		}
 	}
 	
 	override func viewWillAppear(_ animated: Bool) {
@@ -233,86 +303,38 @@ class RootViewController: UIViewController {
 	
 	@objc func becomeBackground() {
 		
-		print("\(getTimeMS()) becomeBackground()")
+		isInBackground = true;
 
 		// we save background date.
 		backgroundDate = Date()
 
-		foregroundWork = true;
 	}
 	
-	var foregroundWork = false;
+	var isInBackground = false;
 	
 	@objc func becomeForeground() {
 		
-		print("\(getTimeMS()) becomeForeground()")
-		
-		// when become foreground, we calculate the time difference.
+		// when become foreground, we adjust start_date.
 		if let bDate = backgroundDate {
-			let diffSec = Date().timeIntervalSince1970 - bDate.timeIntervalSince1970
-			// then apply to the startDate.
+			let dateDiff = Date().timeIntervalSince1970 - bDate.timeIntervalSince1970
+			print("becomeForeground(): dateDiff: \(dateDiff)")
+			
+			// then adjust startDate
 			let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
-			let newDate = Date(timeIntervalSince1970: startDate.timeIntervalSince1970 + diffSec)
-			UserDefaults.standard.set(newDate, forKey: "start_date")
-		}
-		
-		foregroundWork = false;
-	}
-	
-	func showAndBeep() {
-		
-		// alarm beeps every 30 seconds
-		if alarmSec % 30 == 0 {
-			AudioServicesPlayAlertSound(SystemSoundID(1322))
-			if alarmSec % 60 != 0 {
-				exe += 1
-				
-				// start resting cycle.
-				countLabel.textColor = UIColor.white
-				
-			} else {
-				// start exercise cycle.
-				countLabel.textColor = UIColor.green
+			let newStartDate = startDate.addingTimeInterval(dateDiff)
+			UserDefaults.standard.set(newStartDate, forKey: "start_date")
+			backgroundDate = nil
+			
+			// also adjust pauseDate
+			if let pauseDate = UserDefaults.standard.object(forKey: "pause_date") as? Date {
+				let newPauseDate = pauseDate.addingTimeInterval(dateDiff)
+				UserDefaults.standard.set(newPauseDate, forKey: "pause_date")
 			}
 		}
 		
-		DispatchQueue.main.async {
-			
-			self.showLabels()
-		}
+		isInBackground = false;
 	}
 	
-	func showLabels() {
-		
-		print("\(getTimeMS()) showLabels()")
-		
-		guard foregroundWork == false else {
-			return
-		}
-		
-		hourLabel.text = getWith0(hour) + ":" + getWith0(min) + ":" + getWith0(sec)
-		
-		// show min:sec format...
-		countLabel.text = String(alarmSec % 30)
-		exeLabel.text = String(exe)
-	}
-	
-	func getWith0(_ unit: Int) -> String {
-		
-		if unit < 10 {
-			return "0\(unit)"
-		} else {
-			return String(unit)
-		}
-	}
-	
-	func getTimeMS(_ date: Date = Date()) -> String {
-		
-		let dateFormatter = DateFormatter()
-		dateFormatter.dateFormat = "y-MM-dd HH:mm:ss.SSS"
-		let res = dateFormatter.string(from: date)
-		
-		return res
-	}
+
 }
 
