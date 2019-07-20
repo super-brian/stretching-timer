@@ -124,6 +124,7 @@ class RootViewController: UIViewController {
 		// get current date and save it.
 		let startDate = Date()
 		UserDefaults.standard.set(startDate, forKey: "start_date")
+		UserDefaults.standard.removeObject(forKey: "pause_date")
 		
 		// set time variables & show them.
 		setTimeVariables()
