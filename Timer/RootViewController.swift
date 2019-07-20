@@ -54,17 +54,17 @@ class RootViewController: UIViewController {
 	}
 	
 	// UI methods
-	
-	func processPauseButton() {
+	@IBAction func pauseButtonPressed(_ sender: UIButton) {
 		
 		if let t = timer {
 			// pause button pressed.
 			timer = nil
 			t.invalidate()
-			pauseButton.setTitle("Play", for: .normal)
 			
 			let pauseDate = Date()
 			UserDefaults.standard.set(pauseDate, forKey: "pause_date")
+			
+			pauseButton.setTitle("Play", for: .normal)
 			
 		} else {
 			// play button pressed. (or viewDidLoad() called this)
@@ -77,38 +77,50 @@ class RootViewController: UIViewController {
 				UserDefaults.standard.set(newStartDate, forKey: "start_date")
 			}
 			
-			timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
-				
-				self.setTimeVariables()
-				self.showAndBeep()
-			}
+			startTimer()
+			
 			pauseButton.setTitle("Pause", for: .normal)
 		}
-	}
-	
-	@IBAction func pauseButtonPressed(_ sender: UIButton) {
-		
-		processPauseButton()
 	}
 	
 	// what if... reset is pressed while paused?
 	@IBAction func resetButtonPressed(_ sender: UIButton) {
 		
+		getStarted()
+	}
+	
+	// from viewDidLoad(), resetButtonPressed()
+	func getStarted() {
+
 		// we save a new start date.
 		let startDate = Date()
 		UserDefaults.standard.set(startDate, forKey: "start_date")
+		UserDefaults.standard.removeObject(forKey: "pause_date")
 		
 		// reset execution count.
 		exe = 0
-
+		
 		// show now.
 		self.setTimeVariables()
 		self.showAndBeep()
 		
-		// pause and play again.
-		processPauseButton()
-		if timer == nil {
-			processPauseButton()
+		// stop timer if it was working.
+		if let t = timer {
+			timer = nil
+			t.invalidate()
+		}
+		
+		// start timer.
+		startTimer()
+	}
+	
+	// from getStarted(), pauseButtonPressed()
+	func startTimer() {
+		
+		timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { (_) in
+			
+			self.setTimeVariables()
+			self.showAndBeep()
 		}
 	}
 	
@@ -121,17 +133,7 @@ class RootViewController: UIViewController {
 		
 		print("\(getTimeMS()) viewWillAppear()")
 		
-		// get current date and save it.
-		let startDate = Date()
-		UserDefaults.standard.set(startDate, forKey: "start_date")
-		UserDefaults.standard.removeObject(forKey: "pause_date")
-		
-		// set time variables & show them.
-		setTimeVariables()
-		showAndBeep()
-		
-		// start timer that runs continuously.
-		processPauseButton()
+		getStarted()
 		
 		// show battery percentage.
 		UIDevice.current.isBatteryMonitoringEnabled = true
