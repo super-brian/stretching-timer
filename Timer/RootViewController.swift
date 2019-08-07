@@ -37,7 +37,6 @@ class RootViewController: UIViewController {
 	
 	@IBOutlet weak var batteryLabel: UILabel!
 	
-	
 	// instance members
 	var hour = 0
 	var min = 0
@@ -45,7 +44,8 @@ class RootViewController: UIViewController {
 	var alarmSec = 0
 	var exe = 0
 	
-//	var timer: Timer?
+	var beefInterval = 30
+	
 	var totalWidth: CGFloat?
 	var timer: Timer?
 	
@@ -92,6 +92,19 @@ class RootViewController: UIViewController {
 	// what if... reset is pressed while paused?
 	@IBAction func resetButtonPressed(_ sender: UIButton) {
 		
+		resetDefaults()
+	}
+	
+	@IBAction func modeSwitchPressed(_ sender: UISwitch) {
+		
+		if sender.isOn {
+			beefInterval = 30 * 60
+			
+		} else {
+			beefInterval = 30
+		}
+		
+		// need to reset all values.
 		resetDefaults()
 	}
 
@@ -163,10 +176,10 @@ class RootViewController: UIViewController {
 		let startDate = UserDefaults.standard.object(forKey: "start_date") as! Date
 		alarmSec = Int(Date().timeIntervalSince1970 - startDate.timeIntervalSince1970)
 		
-		// alarm beeps every 30 seconds
-		if alarmSec % 30 == 0 {
+		// alarm beeps every beefInterval seconds
+		if alarmSec % beefInterval == 0 {
 			AudioServicesPlayAlertSound(SystemSoundID(1322))
-			if alarmSec % 60 != 0 {
+			if alarmSec % (beefInterval * 2) != 0 {
 				exe += 1
 				
 				// start resting cycle.
@@ -191,7 +204,7 @@ class RootViewController: UIViewController {
 		}
 		
 		// show min:sec format...
-		countLabel.text = String(alarmSec % 30)
+		countLabel.text = String(alarmSec % beefInterval)
 		exeLabel.text = String(exe)
 	}
 	
@@ -234,7 +247,8 @@ class RootViewController: UIViewController {
 		super.viewDidLayoutSubviews()
 		
 		let screenWidth = UIScreen.main.bounds.width
-		// since thie method may be called multiple times, in order to avoid that...
+		
+		// avoid being called multiple times when orientation changes.
 		if screenWidth != prevScreenWidth {
 			// save new value to previous variable.
 			prevScreenWidth = screenWidth
@@ -251,6 +265,7 @@ class RootViewController: UIViewController {
 
 			print("\(getTimeMS()) viewDidLayoutSubviews(): screenHeight \(screenHeight) topSafeAreaHeight \(topSafeAreaHeight) bottomSafeAreaHeight \(bottomSafeAreaHeight) safeAreaHeight \(safeAreaHeight)")
 
+			// get values only one time since opening this app.
 			if hourLabelInitialWidth < 0 {
 				hourLabelInitialWidth = hourLabel.intrinsicContentSize.width
 				hourLabelInitialHeight = hourLabel.intrinsicContentSize.height
@@ -258,8 +273,11 @@ class RootViewController: UIViewController {
 			}
 			
 			// we need to get the right font size considering width and height.
+			// get font size based on width.
 			var fontSize: CGFloat = 50.0 * safeAreaWidth / hourLabelInitialWidth
+			// get height using this font size.
 			let totalHeight: CGFloat = hourLabelInitialHeight / 50.0 * fontSize * 2 + 60
+			// if this height is bigger than screen height,adjust font size again.
 			if totalHeight > safeAreaHeight {
 				// need to decrease font size.
 				fontSize = 50 / hourLabelInitialHeight * (safeAreaHeight - 60) / 2
