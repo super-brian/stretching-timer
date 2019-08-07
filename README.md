@@ -17,5 +17,5 @@ Just try it. Too easy to use.
 
 **Screenshot**
 
-<img src="/images/01.PNG" width="150">
-<img src="/images/02.PNG" height="150">
+<img src="/images/01.PNG" width="600">
+<img src="/images/02.PNG" height="600">
