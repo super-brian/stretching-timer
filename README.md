@@ -1,23 +1,21 @@
 # stretching-timer
-This repository has two branches, master: (Stretching timer) and standing: (Standing timer) which are similar.
-Both are simple timers, the reason for making these is to make them generate some beep / sound when I need to rest/start every 30 seconds. (or for standing timer, stand or sit every 30 minutes)
-Below are for stretching timer, but standing timer is almost the same except that interval is 30 minutes.
+This repository now has one branch: the app includes a switch to toggle stretching mode and standing mode.
 
 **Introduction**
+This app helps you to stretch 30 seconds and have rest for 30 seconds (Or stand up for 30 minutes then sit down for 30 minutes) by sounding beep and vibration of the device.
 
-This is an iOS app, supporting 11.0 or newer, showing the current time and two additional info.
-1. seconds elapsed from 0 to 30 - then repeat again and again.
-2. count of periods of 30 seconds - but every even periods are ignored (for rest)
-3. there is a beep for every 30 seconds. (This is key: this is why I made it.)
+This app...
+1. is an iOS app, supporting 11.0 or newer.
+2. shows the current time
+1. also shows seconds elapsed and the number of times completed.
+2. 'working' time and 'resting' time has the same amount, 30 seconds (Stretching mode) or 30 minutes (Standing mode)
+3. beeps and vibrates every interval of 'working' time completes.
 
 **Usage**
 
-1. Start the app, it will give 5 (or 4) seconds of preparation time.
-2. for 30 seconds, stretch.
-3. for the next 30 seconds, take rest.
-4. repeat 2 & 3.
+Just try it. Too easy to use.
 
 **Screenshot**
 
-<img src="/images/IMG_0035.PNG" width="150">
-<img src="/images/IMG_0036.PNG" height="150">
+<img src="/images/01.PNG" width="150">
+<img src="/images/02.PNG" height="150">
